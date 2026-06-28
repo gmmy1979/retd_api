@@ -47,8 +47,8 @@ npm start        # 普通启动
       {
         "category": "男职工(原60周岁)",
         "originalRetireAge": 60,
-        "originalRetireDate": "2025-01-01",
-        "actualRetireDate": "2025-02-01",
+        "originalRetireDate": "2025-01",
+        "actualRetireDate": "2025-02",
         "actualRetireAge": { "years": 60, "months": 1 },
         "delayMonths": 1
       }
@@ -70,8 +70,8 @@ npm start        # 普通启动
       {
         "category": "女工人(原50周岁)",
         "originalRetireAge": 50,
-        "originalRetireDate": "2035-01-01",
-        "actualRetireDate": "2040-01-01",
+        "originalRetireDate": "2035-01",
+        "actualRetireDate": "2040-01",
         "actualRetireAge": { "years": 55, "months": 0 },
         "delayMonths": 60
       }
@@ -88,8 +88,8 @@ npm start        # 普通启动
 
 | 字段 | 含义 |
 |------|------|
-| `originalRetireAge` / `originalRetireDate` | 按旧政策(改革前)的退休年龄与日期 |
-| `actualRetireDate` | 实际退休日(已含延迟,且已封顶至最终年龄) |
+| `originalRetireAge` / `originalRetireDate` | 按旧政策(改革前)的退休年龄与日期(日期格式 `YYYY-MM`,以"月"为粒度) |
+| `actualRetireDate` | 实际退休日(已含延迟,且已封顶至最终年龄,格式 `YYYY-MM`) |
 | `actualRetireAge` | 实际退休时的年龄(年 + 月) |
 | `delayMonths` | 相对原退休年龄延迟的月数 |
 

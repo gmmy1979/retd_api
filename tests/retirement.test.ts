@@ -9,6 +9,7 @@ import { computeRetirement, computeByGender, POLICY_START } from '../src/lib/ret
  *   女干部   55 → 58,每4个月延迟1月
  *   女工人   50 → 55,每2个月延迟1月
  *
+ * 退休日期格式为 YYYY-MM(以"月"为粒度,不表示具体日)。
  * 预期值依据人社部对照表逻辑手工核算,作为算法的"金标准"。
  */
 
@@ -16,50 +17,50 @@ describe('computeRetirement —— 男职工(60→63,每4月延迟1月)', () => 
   const male = { baseAge: 60, stepMonths: 4, finalAge: 63, category: '男职工(原60周岁)' };
 
   it('政策前已到龄 → 不延迟', () => {
-    // 出生 1964-12-01:原退休 2024-12-01(政策前)→ 延迟0
+    // 出生 1964-12-01:原退休 2024-12(政策前)→ 延迟0
     const r = computeRetirement('1964-12-01', male);
     expect(r.delayMonths).toBe(0);
-    expect(r.actualRetireDate).toBe('2024-12-01');
-    expect(r.originalRetireDate).toBe('2024-12-01');
+    expect(r.actualRetireDate).toBe('2024-12');
+    expect(r.originalRetireDate).toBe('2024-12');
     expect(r.actualRetireAge).toEqual({ years: 60, months: 0 });
   });
 
   it('原退休日恰在政策首月(2025-01)→ 延迟1月', () => {
-    // 出生 1965-01-01:原退休 2025-01-01 → 第1档 → 延迟1月 → 2025-02-01
+    // 出生 1965-01-01:原退休 2025-01 → 第1档 → 延迟1月 → 2025-02
     const r = computeRetirement('1965-01-01', male);
     expect(r.delayMonths).toBe(1);
-    expect(r.actualRetireDate).toBe('2025-02-01');
+    expect(r.actualRetireDate).toBe('2025-02');
     expect(r.actualRetireAge).toEqual({ years: 60, months: 1 });
   });
 
   it('原退休日 2025-04 → 第1档 → 延迟1月', () => {
-    // 出生 1965-04-01:原退休 2025-04-01,monthsAfter=3,tier=floor(3/4)+1=1 → 延迟1月
+    // 出生 1965-04-01:原退休 2025-04,monthsAfter=3,tier=floor(3/4)+1=1 → 延迟1月
     const r = computeRetirement('1965-04-01', male);
     expect(r.delayMonths).toBe(1);
-    expect(r.actualRetireDate).toBe('2025-05-01');
+    expect(r.actualRetireDate).toBe('2025-05');
   });
 
   it('原退休日 2025-05 → 第2档 → 延迟2月', () => {
-    // 出生 1965-05-01:原退休 2025-05-01,monthsAfter=4,tier=floor(4/4)+1=2 → 延迟2月
+    // 出生 1965-05-01:原退休 2025-05,monthsAfter=4,tier=floor(4/4)+1=2 → 延迟2月
     const r = computeRetirement('1965-05-01', male);
     expect(r.delayMonths).toBe(2);
-    expect(r.actualRetireDate).toBe('2025-07-01');
+    expect(r.actualRetireDate).toBe('2025-07');
     expect(r.actualRetireAge).toEqual({ years: 60, months: 2 });
   });
 
   it('原退休日 2025-09 → 第3档 → 延迟3月', () => {
-    // 出生 1965-09-01:原退休 2025-09-01,monthsAfter=8,tier=3 → 延迟3月
+    // 出生 1965-09-01:原退休 2025-09,monthsAfter=8,tier=3 → 延迟3月
     const r = computeRetirement('1965-09-01', male);
     expect(r.delayMonths).toBe(3);
-    expect(r.actualRetireDate).toBe('2025-12-01');
+    expect(r.actualRetireDate).toBe('2025-12');
   });
 
   it('封顶:出生 1976-09-01 → 延迟达36月,封顶63岁', () => {
-    // 出生 1976-09-01:原退休 2036-09-01,monthsAfter=140,tier=36 → 延迟36月 → 2039-09
-    // 但 36月已达上限(60→63 差36月),封顶到出生+63岁 = 2039-09-01
+    // 出生 1976-09-01:原退休 2036-09,monthsAfter=140,tier=36 → 延迟36月 → 2039-09
+    // 但 36月已达上限(60→63 差36月),封顶到出生+63岁 = 2039-09
     const r = computeRetirement('1976-09-01', male);
     expect(r.delayMonths).toBe(36);
-    expect(r.actualRetireDate).toBe('2039-09-01');
+    expect(r.actualRetireDate).toBe('2039-09');
     expect(r.actualRetireAge).toEqual({ years: 63, months: 0 });
   });
 
@@ -67,7 +68,7 @@ describe('computeRetirement —— 男职工(60→63,每4月延迟1月)', () => 
     // 已远超过渡期,封顶63岁
     const r = computeRetirement('1985-01-01', male);
     expect(r.delayMonths).toBe(36);
-    expect(r.actualRetireDate).toBe('2048-01-01');
+    expect(r.actualRetireDate).toBe('2048-01');
     expect(r.actualRetireAge).toEqual({ years: 63, months: 0 });
   });
 });
@@ -76,16 +77,16 @@ describe('computeRetirement —— 女干部(55→58,每4月延迟1月)', () => 
   const cadre = { baseAge: 55, stepMonths: 4, finalAge: 58, category: '女干部(原55周岁)' };
 
   it('政策首月 → 延迟1月', () => {
-    // 出生 1970-01-01:原退休 2025-01-01 → 延迟1月 → 2025-02-01
+    // 出生 1970-01-01:原退休 2025-01 → 延迟1月 → 2025-02
     const r = computeRetirement('1970-01-01', cadre);
     expect(r.delayMonths).toBe(1);
-    expect(r.actualRetireDate).toBe('2025-02-01');
+    expect(r.actualRetireDate).toBe('2025-02');
   });
 
   it('封顶:出生 1981-09-01 → 58岁', () => {
     const r = computeRetirement('1981-09-01', cadre);
     expect(r.delayMonths).toBe(36);
-    expect(r.actualRetireDate).toBe('2039-09-01');
+    expect(r.actualRetireDate).toBe('2039-09');
     expect(r.actualRetireAge).toEqual({ years: 58, months: 0 });
   });
 });
@@ -94,24 +95,24 @@ describe('computeRetirement —— 女工人(50→55,每2月延迟1月)', () => 
   const worker = { baseAge: 50, stepMonths: 2, finalAge: 55, category: '女工人(原50周岁)' };
 
   it('政策首月 → 延迟1月', () => {
-    // 出生 1975-01-01:原退休 2025-01-01 → 第1档 → 延迟1月
+    // 出生 1975-01-01:原退休 2025-01 → 第1档 → 延迟1月
     const r = computeRetirement('1975-01-01', worker);
     expect(r.delayMonths).toBe(1);
-    expect(r.actualRetireDate).toBe('2025-02-01');
+    expect(r.actualRetireDate).toBe('2025-02');
   });
 
   it('原退休日 2025-02 → 仍第1档(每2月一档)→ 延迟1月', () => {
-    // 出生 1975-02-01:原退休 2025-02-01,monthsAfter=1,tier=floor(1/2)+1=1 → 延迟1月
+    // 出生 1975-02-01:原退休 2025-02,monthsAfter=1,tier=floor(1/2)+1=1 → 延迟1月
     const r = computeRetirement('1975-02-01', worker);
     expect(r.delayMonths).toBe(1);
-    expect(r.actualRetireDate).toBe('2025-03-01');
+    expect(r.actualRetireDate).toBe('2025-03');
   });
 
   it('原退休日 2025-03 → 第2档 → 延迟2月', () => {
-    // 出生 1975-03-01:原退休 2025-03-01,monthsAfter=2,tier=floor(2/2)+1=2 → 延迟2月
+    // 出生 1975-03-01:原退休 2025-03,monthsAfter=2,tier=floor(2/2)+1=2 → 延迟2月
     const r = computeRetirement('1975-03-01', worker);
     expect(r.delayMonths).toBe(2);
-    expect(r.actualRetireDate).toBe('2025-05-01');
+    expect(r.actualRetireDate).toBe('2025-05');
   });
 
   it('封顶:出生 1980-01-01 → 未达封顶,延迟31月', () => {
@@ -119,7 +120,7 @@ describe('computeRetirement —— 女工人(50→55,每2月延迟1月)', () => 
     // 实际退休 = 1980-01 + (600+31)月 = 2032-08;封顶线55岁=2035-01,未触及
     const r = computeRetirement('1980-01-01', worker);
     expect(r.delayMonths).toBe(31);
-    expect(r.actualRetireDate).toBe('2032-08-01');
+    expect(r.actualRetireDate).toBe('2032-08');
     expect(r.actualRetireAge).toEqual({ years: 52, months: 7 });
   });
 
@@ -134,7 +135,7 @@ describe('computeRetirement —— 女工人(50→55,每2月延迟1月)', () => 
     // 出生1985-01:原退休2035-01,monthsAfter=120,tier=61 → delay=61 → 封顶到60月
     const r = computeRetirement('1985-01-01', worker);
     expect(r.delayMonths).toBe(60);
-    expect(r.actualRetireDate).toBe('2040-01-01');
+    expect(r.actualRetireDate).toBe('2040-01');
     expect(r.actualRetireAge).toEqual({ years: 55, months: 0 });
   });
 });

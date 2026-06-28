@@ -25,9 +25,9 @@ export interface RetirementResult {
   /** 原法定退休年龄(整岁) */
   originalRetireAge: number;
   /** 原法定退休日(出生日期 + 原退休年龄) */
-  originalRetireDate: string; // YYYY-MM-DD
+  originalRetireDate: string; // YYYY-MM
   /** 实际退休日(已含延迟、且已封顶) */
-  actualRetireDate: string; // YYYY-MM-DD
+  actualRetireDate: string; // YYYY-MM
   /** 实际退休年龄(年+月) */
   actualRetireAge: Age;
   /** 相对原退休年龄延迟的月数 */

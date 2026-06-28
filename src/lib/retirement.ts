@@ -143,9 +143,9 @@ function compareYM(a: YearMonth, b: YearMonth): number {
   return 0;
 }
 
-/** 年月 → YYYY-MM-DD(退休日统一取该月1日,因延迟以"月"为粒度) */
+/** 年月 → YYYY-MM(退休以"月"为粒度,不表示具体日) */
 function formatDate(ym: YearMonth): string {
-  return `${ym.y}-${pad(ym.m)}-01`;
+  return `${ym.y}-${pad(ym.m)}`;
 }
 
 function pad(n: number): string {
