@@ -1,0 +1,58 @@
+/* Navbar scroll state */
+.nav-scrolled {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+/* Tool card hover lift */
+.tool-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* Result highlight */
+.result-highlight {
+  background: linear-gradient(135deg, #EEF1FF 0%, #DDE3FF 100%);
+  border: 1px solid #BBC8FF;
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Category tab active */
+.category-tab.active {
+  background-color: #4F6CF7;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(79, 108, 247, 0.3);
+}
+
+/* Hamburger menu animation */
+.hamburger-line {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.hamburger-open .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+.hamburger-open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-open .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
